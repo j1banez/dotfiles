@@ -7,11 +7,10 @@ call vundle#begin()
 
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'vim-airline/vim-airline'
-Plugin 'scrooloose/nerdtree'
-Plugin 'ervandew/supertab'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'junegunn/fzf'
-Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'junegunn/fzf.vim'
+Plugin 'menisadi/kanagawa.vim'
 
 call vundle#end()            " required
 
@@ -33,35 +32,92 @@ filetype plugin indent on    " required
 " Non vundle config "
 "###################"
 
-colorscheme iceberg
-
-syntax on
-
-set background=dark
 set expandtab tabstop=4 softtabstop=4 shiftwidth=4 smartindent
-set noerrorbells
+
+" UI
 set number
 set mouse=a
-set backspace=2
 set ruler
-set hlsearch
-set cursorline
 set nowrap
-set encoding=utf-8
 set colorcolumn=80
+set nocursorline
+
+" Search
 set incsearch
+set hlsearch
+" Remove highlights
+nnoremap <Esc><Esc> :nohlsearch<CR>
 
-" Display useless spaces before a /n
-autocmd BufWinEnter * let w:m2=matchadd('Tab', '\t', -1)
-autocmd BufWinEnter * let w:m3=matchadd('Space', '\s\+$\| \+\ze\t', -1)
-highlight Tab ctermbg=NONE guibg=NONE
-highlight Space ctermbg=darkred guibg=darkred
+" Editing
+set noerrorbells
+set backspace=2
+set encoding=utf-8
+set completeopt=menuone,noinsert,noselect
 
-" Auto NERDTree without focus
-"autocmd vimenter * NERDTree
-" Close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" Display useless whitespaces
+set list
+set listchars=tab:»·,trail:·
+highlight SpecialKey ctermfg=darkred
 
 " `gf` opens file under cursor in a new vertical split
 nnoremap gf :vertical wincmd f<CR>
 
+" Headers as C files
+let g:c_syntax_for_h = 1
+
+" FZF – Quick Open
+nnoremap <C-p> :Files<CR>
+
+set termguicolors
+colorscheme kanagawa
+syntax on
+set background=dark
+
+" Tab / Shift-Tab completion in Insert mode
+function! s:TabComplete() abort
+  if pumvisible()
+    return "\<C-n>"
+  endif
+  if getline('.')[0 : col('.')-2] =~# '^\s*$'
+    return "\<Tab>"
+  endif
+  return "\<C-n>"
+endfunction
+inoremap <expr> <Tab> <SID>TabComplete()
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+" Rust: format current buffer with rustfmt on save
+augroup RustFmtCurrentFile
+  autocmd!
+  autocmd BufWritePre *.rs call RustFmtCurrentBuffer()
+augroup END
+
+function! RustFmtCurrentBuffer() abort
+  let l:view = winsaveview()
+  let l:src = join(getline(1, '$'), "\n") . "\n"
+  let l:cmd = 'rustfmt --emit=stdout --edition=2024 --style-edition=2024'
+  let l:out = system(l:cmd, l:src)
+
+  if v:shell_error != 0
+    echohl ErrorMsg
+    echom 'rustfmt failed:'
+    for l:line in split(l:out, "\n")
+      if !empty(l:line)
+        echom l:line
+      endif
+    endfor
+    echohl None
+    return
+  endif
+
+  let l:lines = split(l:out, "\n", 1)
+  if !empty(l:lines) && l:lines[-1] ==# ''
+    call remove(l:lines, -1)
+  endif
+
+  keepjumps call setline(1, l:lines)
+  if line('$') > len(l:lines)
+    execute (len(l:lines) + 1) . ',$delete _'
+  endif
+  call winrestview(l:view)
+endfunction
