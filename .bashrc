@@ -3,9 +3,6 @@ if [ -f $HOME/.devicerc ]; then
   . $HOME/.devicerc
 fi
 
-alias bashrc='vim ~/.bashrc'
-alias src='source ~/.bashrc'
-
 # Fs aliases
 alias l='ls -l'
 alias ld='l --group-directories-first'
@@ -76,3 +73,5 @@ export PS1='\[$(tput bold)\]\[\033[38;5;243m\]\u\[$(tput sgr0)\]\[\033[38;5;247m
 
 # Set default editor for commands like crontab
 export VISUAL=vim
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
