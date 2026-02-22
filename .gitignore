@@ -1,3 +1,4 @@
 .vim/bundle
 .vim/.netrwhist
 oldrc
+.oh-my-zsh/custom/local.zsh
