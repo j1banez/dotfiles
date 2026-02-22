@@ -4,12 +4,23 @@
 # chmod 700 this file.
 #
 
-export AWS_ACCESS_KEY_ID=
-export AWS_SECRET_ACCESS_KEY=
-export BUCKET_NAME=
+ENV_FILE="$HOME/.config/s3restic/env"
+
+cleanup() {
+  unset AWS_ACCESS_KEY_ID
+  unset AWS_SECRET_ACCESS_KEY
+  unset BUCKET_NAME
+}
+
+trap cleanup EXIT
+
+if [ -f "$ENV_FILE" ]; then
+  . "$ENV_FILE"
+fi
+
+if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ] || [ -z "$BUCKET_NAME" ]; then
+  echo "Missing s3restic config. Fill: $ENV_FILE" >&2
+  exit 1
+fi
 
 restic -r s3:s3.amazonaws.com/$BUCKET_NAME "$@"
-
-unset AWS_ACCESS_KEY_ID
-unset AWS_SECRET_ACCESS_KEY
-unset BUCKET_NAME
