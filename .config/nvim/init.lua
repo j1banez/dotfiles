@@ -70,6 +70,13 @@ vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
 
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "make",
+    callback = function()
+        vim.opt_local.expandtab = false
+    end,
+})
+
 -- UI
 vim.opt.number = true
 vim.opt.relativenumber = false
