@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 
 #
-# chmod 700 this file.
+# Setup:
+#   1. Install restic (on Arch/Omarchy: sudo pacman -S restic).
+#   2. Create ~/.config/s3restic/env with:
+#        export AWS_ACCESS_KEY_ID=...
+#        export AWS_SECRET_ACCESS_KEY=...
+#        export BUCKET_NAME=...
+#   3. Run: chmod 600 ~/.config/s3restic/env
+#
+# Run: chmod 700 this file
 #
 
 ENV_FILE="$HOME/.config/s3restic/env"
