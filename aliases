@@ -1,0 +1,12 @@
+alias vim='nvim'
+
+alias l='ls -l'
+alias la='l -a'
+
+alias g='git status'
+alias gb='git branch'
+alias gc='git checkout'
+alias gd='git diff'
+
+alias d='docker'
+alias dc='docker-compose'
