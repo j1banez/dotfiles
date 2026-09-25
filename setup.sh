@@ -38,13 +38,6 @@ trygit https://github.com/j1banez/dotfiles "$DOTFILES_DIR"
 # (-(-.(-.-).-)-)
 info "dotfiles git repository path: $DOTFILES_DIR"
 
-# Git
-title "Git"
-# Symlinks git config files
-exe ln -sf "$DOTFILES_DIR/.gitconfig" "$HOME/.gitconfig"
-exe ln -sf "$DOTFILES_DIR/.gitignore_global" "$HOME/.gitignore_global"
-info "Git config done!"
-
 # Vim
 title "Vim"
 # Symlinks .vim directory
@@ -63,25 +56,26 @@ mkdir -p "$HOME/.config/nvim"
 exe ln -sf "$DOTFILES_DIR/.config/nvim/init.lua" "$HOME/.config/nvim/init.lua"
 info "Neo Vim config done!"
 
-# Bash
-title "Bash"
-# Download git-prompt script
-if [ ! -f "$HOME/.git-prompt.sh" ]; then
-    curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o "$HOME/.git-prompt.sh"
+# Bash aliases
+if [ -f "$HOME/.bashrc" ]; then
+    title "Bash aliases"
+    if ! grep -Fq '.dotfiles/aliases' "$HOME/.bashrc"; then
+        printf '\n%s\n' '[[ -f ~/.dotfiles/aliases ]] && source ~/.dotfiles/aliases' >> "$HOME/.bashrc"
+        info "Added aliases to ~/.bashrc"
+    else
+        info "Aliases already imported from ~/.bashrc"
+    fi
 fi
-# Symlinks bashrc
-exe ln -sf "$DOTFILES_DIR/.bashrc" "$HOME/.bashrc"
-info "Bash config done!"
 
-# Zsh
-title "Zsh"
-if [ -d "$HOME/.oh-my-zsh" ]; then
-    exe ln -sf "$DOTFILES_DIR/.zshrc" "$HOME/.zshrc"
-    exe ln -sfn "$DOTFILES_DIR/.oh-my-zsh/custom" "$HOME/.oh-my-zsh/custom"
-    info "Zsh config done!"
-else
-    warning "Oh My Zsh not found. Install it manually first: https://ohmyz.sh"
-    warning "Then run setup.sh again to link ~/.zshrc and ~/.oh-my-zsh/custom"
+# Zsh aliases
+if [ -f "$HOME/.zshrc" ]; then
+    title "Zsh aliases"
+    if ! grep -Fq '.dotfiles/aliases' "$HOME/.zshrc"; then
+        printf '\n%s\n' '[[ -f ~/.dotfiles/aliases ]] && source ~/.dotfiles/aliases' >> "$HOME/.zshrc"
+        info "Added aliases to ~/.zshrc"
+    else
+        info "Aliases already imported from ~/.zshrc"
+    fi
 fi
 
 # Tmux
@@ -121,4 +115,4 @@ else
     warning "No files found in $DOTFILES_DIR/bin"
 fi
 
-echo $GRN"\nSetup finished. Open a new terminal or run: source ~/.zshrc"$NON
+echo $GRN"\nSetup finished. Open a new terminal or run: source ~/.bashrc"$NON

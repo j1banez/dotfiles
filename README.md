@@ -14,7 +14,6 @@ Curl, Git, Vim and Bash must be installed.
 
 Optional dependencies (recommended based on enabled configs):
 
-- Zsh + Oh My Zsh
 - Neovim
 - Tmux
 - Ghostty
