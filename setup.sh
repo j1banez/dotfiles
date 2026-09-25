@@ -71,11 +71,6 @@ if [ -f "$HOME/.zshrc" ]; then
     fi
 fi
 
-# Tmux
-title "Tmux"
-exe ln -sf "$DOTFILES_DIR/.tmux.conf" "$HOME/.tmux.conf"
-info "Tmux config done!"
-
 # Ghostty
 title "Ghostty"
 mkdir -p "$HOME/.config/ghostty"
@@ -114,4 +109,4 @@ else
     warning "No files found in $DOTFILES_DIR/bin"
 fi
 
-echo $GRN"\nSetup finished. Open a new terminal or run: source ~/.bashrc"$NON
+echo $GRN"\nSetup finished."$NON
