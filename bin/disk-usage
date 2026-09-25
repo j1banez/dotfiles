@@ -13,7 +13,7 @@ usage() {
 
 if [ ! -x "$DISCORD" ]; then
   echo "Discord executable not found in PATH"
-  echo "hint: mv ~/.dotfiles/bin/discord ~/bin && chmod +x ~/bin/discord"
+  echo "hint: ln -s ~/.dotfiles/bin/discord ~/.local/bin/discord"
   exit 1
 fi
 

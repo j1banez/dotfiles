@@ -97,13 +97,19 @@ fi
 info "s3restic config done!"
 
 title "bin"
-# Create bin directory
-mkdir -p "$HOME/bin"
-# Copy programs into home bin directory
+mkdir -p "$HOME/.local/bin"
 set -- "$DOTFILES_DIR/bin/"*
 if [ -e "$1" ]; then
-    cp -r "$@" "$HOME/bin"
-    info "Some programs has been placed in ~/bin"
+    for program do
+        [ -f "$program" ] || continue
+        destination="$HOME/.local/bin/${program##*/}"
+        if [ -e "$destination" ] && [ ! -L "$destination" ]; then
+            warning "Skipping $destination: file already exists"
+        else
+            exe ln -sfn "$program" "$destination"
+        fi
+    done
+    info "Programs linked in ~/.local/bin"
 else
     warning "No files found in $DOTFILES_DIR/bin"
 fi
