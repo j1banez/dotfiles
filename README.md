@@ -10,11 +10,4 @@ to look at the script if it can help you!
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/j1banez/dotfiles/master/setup.sh)"
 ```
 
-Curl, Git, Vim and Bash must be installed.
-
-Optional dependencies (recommended based on enabled configs):
-
-- Neovim
-- Tmux
-- Ghostty
-- restic (for `bin/s3restic`)
+Curl and Git are required.
