@@ -74,7 +74,14 @@ fi
 # Ghostty
 title "Ghostty"
 mkdir -p "$HOME/.config/ghostty"
-exe ln -sf "$DOTFILES_DIR/.config/ghostty/config" "$HOME/.config/ghostty/config"
+ghostty_config="$HOME/.config/ghostty/config"
+ghostty_custom="$DOTFILES_DIR/.config/ghostty/config"
+if [ ! -e "$ghostty_config" ] && [ ! -L "$ghostty_config" ]; then
+    exe ln -s "$ghostty_custom" "$ghostty_config"
+elif [ -f "$ghostty_config" ] && [ ! -L "$ghostty_config" ] && ! grep -Fq "$ghostty_custom" "$ghostty_config"; then
+    # Do not write through symlinks: they may point to system-managed files.
+    printf '\nconfig-file = "%s"\n' "$ghostty_custom" >> "$ghostty_config"
+fi
 info "Ghostty config done!"
 
 # s3restic local config
