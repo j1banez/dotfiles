@@ -40,14 +40,7 @@ info "dotfiles git repository path: $DOTFILES_DIR"
 
 # Vim
 title "Vim"
-# Symlinks .vim directory
-exe ln -sfn "$DOTFILES_DIR/.vim" "$HOME/.vim"
-# Install/Clone Vundle into .vim/bundle
-trygit https://github.com/VundleVim/Vundle.vim.git "$HOME/.vim/bundle/Vundle.vim"
-# Symlinks vimrc
-exe ln -sf "$HOME/.vim/vimrc" "$HOME/.vimrc"
-# Install vim plugin via Vundle
-exe vim +PluginInstall +qall
+exe ln -sf "$DOTFILES_DIR/.vimrc" "$HOME/.vimrc"
 info "Vim config done!"
 
 # Neo Vim
