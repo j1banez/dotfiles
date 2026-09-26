@@ -43,11 +43,26 @@ title "Vim"
 exe ln -sf "$DOTFILES_DIR/.vimrc" "$HOME/.vimrc"
 info "Vim config done!"
 
-# Neo Vim
-title "Neo Vim"
-mkdir -p "$HOME/.config/nvim"
-exe ln -sf "$DOTFILES_DIR/.config/nvim/init.lua" "$HOME/.config/nvim/init.lua"
-info "Neo Vim config done!"
+# Neovim: keep the existing LazyVim init.lua
+title "Neovim"
+if [ -f "$HOME/.config/nvim/init.lua" ]; then
+    mkdir -p "$HOME/.config/nvim/lua/plugins"
+    set -- "$DOTFILES_DIR/.config/nvim/lua/plugins/"*.lua
+    if [ -e "$1" ]; then
+        for plugin do
+            nvim_custom="$HOME/.config/nvim/lua/plugins/${plugin##*/}"
+            if [ -e "$nvim_custom" ] && [ ! -L "$nvim_custom" ]; then
+                warning "Skipping $nvim_custom: file already exists"
+            else
+                exe ln -sfn "$plugin" "$nvim_custom"
+            fi
+        done
+    else
+        warning "No Neovim plugins found in dotfiles"
+    fi
+else
+    warning "Neovim config not found; install LazyVim first"
+fi
 
 # Bash aliases
 if [ -f "$HOME/.bashrc" ]; then
